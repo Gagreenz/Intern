@@ -250,13 +250,10 @@ module.exports = {
         }
 
         let half = new BigNum(this.Sub(max.value,divider.value));
-        while(max.isBiggerAbsolute(divider) && half.value != ''){
+        while(max.isBiggerAbsolute(divider) && half.value.length != 1){
             half = new BigNum(this.Sub(max.value,divider.value));
             half.divideByHalf();
             
-
-            if(half.value == '1') 
-                break;
             if(first.isBiggerAbsolute(new BigNum(this.Mul(second.value,divider.value)))){
                 divider = new BigNum(this.Add(divider.value,half.value));
             }
@@ -266,12 +263,23 @@ module.exports = {
             
             }
         }
+        if(first.isBiggerAbsolute(new BigNum(this.Mul(second.value,divider.value)))){
+            while(first.isBiggerAbsolute(new BigNum(this.Mul(second.value,divider.value)))){
+                divider = new BigNum(this.Add(divider.value,'1'));
+            }
+        }
+        else{
+            while(!first.isBiggerAbsolute(new BigNum(this.Mul(second.value,divider.value)))){
+                divider = new BigNum(this.Sub(divider.value,'1'));
+            }
+        }
+
         if(divider.length == 0) return '0';
 
-        if(isNegative)
-            divider.value = this.Add(divider.value,'1');
-        else
-            divider.value = this.Sub(divider.value,'1');
+
+        if((this.Sub(first.value,this.Mul(second.value,divider.value))[0] == '-')){
+            divider = new BigNum(this.Sub(divider.value,'1'));
+        }
 
         return isNegative ? "-" + divider.value : divider.value;
     }

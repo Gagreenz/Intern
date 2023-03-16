@@ -1,0 +1,81 @@
+CREATE TABLE Films
+(
+  Id SERIAL PRIMARY KEY,
+  Title CHARACTER VARYING(255) NOT NULL,
+  TagLine CHARACTER VARYING(255) NOT NULL,
+  AgeRating CHARACTER VARYING(255) NOT NULL,
+  MPPARating CHARACTER VARYING(255) NOT NULL,
+  MarketingBudget INTEGER NOT NULL,
+  Budget INTEGER NOT NULL,
+  FeesTotal INTEGER NOT NULL,
+  FeesUSA INTEGER NOT NULL,
+  CreateAt DATE NOT NULL,
+  PremiereTotal DATE NOT NULL,
+  PremiereRussia DATE NOT NULL,
+  PremiereDVD DATE NOT NULL,
+  Duration INTERVAL NOT NULL,
+  Director_Id INTEGER NOT NULL,
+  Screenwriter_Id INTEGER NOT NULL,
+  Producer_Id INTEGER NOT NULL,
+  Operator_Id INTEGER NOT NULL,
+  Composer_Id INTEGER NOT NULL,
+  Artist_Id INTEGER NOT NULL,
+  Editor_Id INTEGER NOT NULL,
+  Viewers_Id INTEGER NOT NULL,
+  CONSTRAINT fk_director FOREIGN KEY (Director_Id) REFERENCES Person (Id),
+  CONSTRAINT fk_screenwriter FOREIGN KEY (Screenwriter_Id) REFERENCES Person (Id),
+  CONSTRAINT fk_producer FOREIGN KEY (Producer_Id) REFERENCES Person (Id),
+  CONSTRAINT fk_operator FOREIGN KEY (Operator_Id) REFERENCES Person (Id),
+  CONSTRAINT fk_compose FOREIGN KEY (Composer_Id) REFERENCES Person (Id),
+  CONSTRAINT fk_artist FOREIGN KEY (Artist_Id) REFERENCES Person (Id),
+  CONSTRAINT fk_editor FOREIGN KEY (Editor_Id) REFERENCES Person (Id),
+  CONSTRAINT fk_viewers FOREIGN KEY (Editor_Id) REFERENCES Viewers(Id)
+)
+
+CREATE TABLE Person
+(
+	Id SERIAL PRIMARY KEY,
+	FirstName CHARACTER VARYING(255) NOT NULL,
+	Surname CHARACTER VARYING(255) NOT NULL
+)
+
+CREATE TABLE Viewers
+(
+	Id SERIAL PRIMARY KEY,
+	Count INTEGER NOT NULL,
+	Country CHARACTER VARYING(255) NOT NULL
+)
+
+CREATE TABLE Genre
+(
+	Id SERIAL PRIMARY KEY,
+	Name CHARACTER VARYING(255)	
+)
+
+CREATE TABLE FilmGenres (
+    Film_Id INTEGER NOT NULL,
+    Genre_Id INTEGER NOT NULL,
+    CONSTRAINT pk_filmgenres PRIMARY KEY (Film_Id, Genre_Id),
+    CONSTRAINT fk_filmgenres_film FOREIGN KEY (Film_Id) REFERENCES Films (Id),
+    CONSTRAINT fk_filmgenres_genre FOREIGN KEY (Genre_Id) REFERENCES Genre (Id)
+);
+
+CREATE TABLE FilmMainRole
+(
+    FilmId INTEGER NOT NULL,
+    ActorId INTEGER NOT NULL,
+    RoleName CHARACTER VARYING(255),
+    CONSTRAINT pk_film_main_role PRIMARY KEY (FilmId, ActorId),
+    CONSTRAINT fk_film FOREIGN KEY (FilmId) REFERENCES Films (Id),
+    CONSTRAINT fk_actor FOREIGN KEY (ActorId) REFERENCES Person (Id)
+);
+
+CREATE TABLE FilmDupRole
+(
+    FilmId INTEGER NOT NULL,
+    ActorId INTEGER NOT NULL,
+    RoleName CHARACTER VARYING(255),
+    CONSTRAINT pk_film_dup_role PRIMARY KEY (FilmId, ActorId),
+    CONSTRAINT fk_film FOREIGN KEY (FilmId) REFERENCES Films (Id),
+    CONSTRAINT fk_actor FOREIGN KEY (ActorId) REFERENCES Person (Id)
+);
